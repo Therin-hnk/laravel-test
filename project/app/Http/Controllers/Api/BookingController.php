@@ -47,4 +47,14 @@ class BookingController extends Controller
 
         return response()->json(['message' => 'Booking cancelled'], 200);
     }
+
+    private function decrementQuantity(Ticket $ticket, int $quantity)
+    {
+        $ticket->decrement('quantity', $quantity);
+    }
+
+    private function incrementQuantity(Ticket $ticket, int $quantity)
+    {
+        $ticket->increment('quantity', $quantity);
+    }
 }

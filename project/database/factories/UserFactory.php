@@ -14,43 +14,37 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name(),
-            'email' => $this->faker->unique()->safeEmail(),
+            'name' => fake()->name(),
+            'email' => fake()->unique()->safeEmail(),
+            'email_verified_at' => now(),
             'password' => Hash::make('password'), // Mot de passe par défaut
-            'phone' => $this->faker->phoneNumber(),
-            'role' => $this->faker->randomElement(['admin', 'organizer', 'customer']),
-            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
-            'updated_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'phone' => fake()->phoneNumber(),
+            'role' => 'customer', // Rôle par défaut cohérent
+            'remember_token' => Str::random(10),
         ];
     }
 
     // État pour créer un admin
-    public function admin()
+    public function admin(): static
     {
-        return $this->state(function (array $attributes) {
-            return [
-                'role' => 'admin',
-            ];
-        });
+        return $this->state(fn (array $attributes) => [
+            'role' => 'admin',
+        ]);
     }
 
     // État pour créer un organisateur
-    public function organizer()
+    public function organizer(): static
     {
-        return $this->state(function (array $attributes) {
-            return [
-                'role' => 'organizer',
-            ];
-        });
+        return $this->state(fn (array $attributes) => [
+            'role' => 'organizer',
+        ]);
     }
 
     // État pour créer un client
-    public function customer()
+    public function customer(): static
     {
-        return $this->state(function (array $attributes) {
-            return [
-                'role' => 'customer',
-            ];
-        });
+        return $this->state(fn (array $attributes) => [
+            'role' => 'customer',
+        ]);
     }
 }

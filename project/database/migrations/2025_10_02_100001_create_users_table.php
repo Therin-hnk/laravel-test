@@ -12,10 +12,12 @@ return new class extends Migration
             $table->id(); // BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY
             $table->string('name'); // VARCHAR(255) NOT NULL
             $table->string('email')->unique(); // VARCHAR(255) UNIQUE NOT NULL
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('password'); // VARCHAR(255) NOT NULL
             $table->string('phone', 20)->nullable(); // VARCHAR(20) NULL
             $table->enum('role', ['admin', 'organizer', 'customer'])->default('customer'); // ENUM NOT NULL
             $table->timestamps(); // created_at, updated_at
+            $table->rememberToken();
         });
     }
 
