@@ -5,25 +5,22 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePaymentRequest;
 use App\Models\Booking;
-use App\Models\Payment;
+use App\Services\PaymentService;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
+    protected $paymentService;
+
+    public function __construct(PaymentService $paymentService)
+    {
+        $this->paymentService = $paymentService;
+    }
+
     public function store(StorePaymentRequest $request)
     {
         $booking = Booking::findOrFail($request->route('id'));
-        $amount = $booking->quantity * $booking->ticket->price;
-
-        $payment = Payment::create([
-            'booking_id' => $booking->id,
-            'amount' => $amount,
-            'status' => rand(0, 10) > 2 ? 'success' : 'failed', // Simulation 80% succès
-        ]);
-
-        if ($payment->status === 'success') {
-            $booking->update(['status' => 'confirmed']);
-        }
+        $payment = $this->paymentService->processPayment($booking);
 
         return response()->json(['data' => $payment, 'message' => 'Payment processed'], 201);
     }

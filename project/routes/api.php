@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\TicketController;
 use Illuminate\Support\Facades\Route;
 
+// Routes Auth
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
@@ -32,7 +33,7 @@ Route::middleware(['auth:sanctum', 'role:admin,organizer'])->group(function () {
 
 // Routes Bookings
 Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
-    Route::post('/tickets/{id}/bookings', [BookingController::class, 'store']);
+    Route::post('/tickets/{id}/bookings', [BookingController::class, 'store'])->middleware('prevent.double.booking');
     Route::get('/bookings', [BookingController::class, 'index']);
     Route::put('/bookings/{booking}/cancel', [BookingController::class, 'cancel']);
 });

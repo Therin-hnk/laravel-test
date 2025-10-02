@@ -44,6 +44,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'auth:sanctum' => \Laravel\Sanctum\Http\Middleware\Authenticate::class,
-        'role' => CheckRole::class,
+        'role' => \App\Http\Middleware\CheckRole::class,
+        'prevent.double.booking' => PreventDoubleBooking::class,
     ];
 }

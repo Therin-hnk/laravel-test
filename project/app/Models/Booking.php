@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\ManagesQuantity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Booking extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, ManagesQuantity;
 
     protected $fillable = [
         'user_id',
@@ -18,10 +19,9 @@ class Booking extends Model
     ];
 
     protected $casts = [
-        'status' => 'string', // Cast ENUM to string
+        'status' => 'string',
     ];
 
-    // Relations
     public function user()
     {
         return $this->belongsTo(User::class);

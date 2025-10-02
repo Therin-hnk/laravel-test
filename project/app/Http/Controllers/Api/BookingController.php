@@ -22,7 +22,7 @@ class BookingController extends Controller
         $ticket = Ticket::findOrFail($request->route('id'));
 
         $booking = DB::transaction(function () use ($request, $ticket) {
-            $ticket->decrement('quantity', $request->quantity);
+            $this->decrementQuantity($ticket, $request->quantity);
             return Booking::create([
                 'user_id' => auth()->id(),
                 'ticket_id' => $ticket->id,
@@ -40,8 +40,10 @@ class BookingController extends Controller
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        $booking->update(['status' => 'cancelled']);
-        $booking->ticket->increment('quantity', $booking->quantity);
+        DB::transaction(function () use ($booking) {
+            $booking->update(['status' => 'cancelled']);
+            $this->incrementQuantity($booking->ticket, $booking->quantity);
+        });
 
         return response()->json(['message' => 'Booking cancelled'], 200);
     }
